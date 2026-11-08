@@ -5,7 +5,7 @@ from src.ingestion.ast_parser import PythonASTParser
 from src.agents.graph_router import build_audit_graph
 from rich.pretty import pprint
 from src.reporting.console_reporter import display_audit_report
-
+from src.reporting.exporter import export_report
 def run_ingestion(target_dir: str):
     
     print(f" Scanning directory: {target_dir}")
@@ -35,6 +35,7 @@ def run_ingestion(target_dir: str):
     final_state = app.invoke(initial_state)
     
     display_audit_report(final_state)    
+    export_report(final_state, output_path="audit_report.json")
     
 if __name__ == "__main__":
     path = "."
