@@ -1,0 +1,6 @@
+langgraph
+langchain-core
+pydantic>=2.0
+tree-sitter
+click
+rich
