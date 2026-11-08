@@ -2,7 +2,8 @@ import json
 import sys
 from src.ingestion.codebase_walker import CodebaseWalker
 from src.ingestion.ast_parser import PythonASTParser
-
+from src.agents.graph_router import build_audit_graph
+from rich.pretty import pprint
 def run_ingestion(target_dir: str):
     
     print(f" Scanning directory: {target_dir}")
@@ -19,8 +20,21 @@ def run_ingestion(target_dir: str):
             ast_meta = parser.parse_code(code, f["relative_path"])
             parsed_data.append(ast_meta)
 
-    print("\n--- Ingestion Output Sample ---")
-    print(json.dumps(parsed_data, indent=2))
+    initial_state = {
+        "target_dir": target_dir,
+        "file_tree": files,
+        "parsed_ast": parsed_data,
+        "findings": [],
+        "current_node": "entry"
+    }
+    
+    pprint(initial_state, expand_all=True)
+    
+    app = build_audit_graph()
+    final_state = app.invoke(initial_state)
+    
+    pprint(final_state, expand_all=True)
+    
     
 if __name__ == "__main__":
     path = "."
