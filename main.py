@@ -4,6 +4,8 @@ from src.ingestion.codebase_walker import CodebaseWalker
 from src.ingestion.ast_parser import PythonASTParser
 from src.agents.graph_router import build_audit_graph
 from rich.pretty import pprint
+from src.reporting.console_reporter import display_audit_report
+
 def run_ingestion(target_dir: str):
     
     print(f" Scanning directory: {target_dir}")
@@ -28,13 +30,11 @@ def run_ingestion(target_dir: str):
         "current_node": "entry"
     }
     
-    pprint(initial_state, expand_all=True)
     
     app = build_audit_graph()
     final_state = app.invoke(initial_state)
     
-    pprint(final_state, expand_all=True)
-    
+    display_audit_report(final_state)    
     
 if __name__ == "__main__":
     path = "."
