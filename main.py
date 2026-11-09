@@ -6,6 +6,7 @@ from src.agents.graph_router import build_audit_graph
 from rich.pretty import pprint
 from src.reporting.console_reporter import display_audit_report
 from src.reporting.exporter import export_report
+
 def run_ingestion(target_dir: str):
     
     print(f" Scanning directory: {target_dir}")
