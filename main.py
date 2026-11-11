@@ -6,6 +6,7 @@ from src.agents.graph_router import build_audit_graph
 from rich.pretty import pprint
 from src.reporting.console_reporter import display_audit_report
 from src.reporting.exporter import export_report
+from src.vector_store.code_indexer import CodebaseVectorStore
 
 def run_ingestion(target_dir: str):
     
@@ -23,6 +24,9 @@ def run_ingestion(target_dir: str):
             ast_meta = parser.parse_code(code, f["relative_path"])
             parsed_data.append(ast_meta)
 
+    vectorStore = CodebaseVectorStore()
+    vectorStore.index_parsed_ast(parsed_data, walker)
+    return
     initial_state = {
         "target_dir": target_dir,
         "file_tree": files,
