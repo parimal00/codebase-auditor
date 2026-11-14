@@ -173,12 +173,12 @@ Make sure you have installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone https://github.com/parimal00/codebase-auditor
 
 cd codebase-auditor
 ```
 
-Replace `<YOUR_REPOSITORY_URL>` with your GitHub repository URL.
+Replace `https://github.com/parimal00/codebase-auditor` with your GitHub repository URL.
 
 ### 2. Create the Conda Environment
 
