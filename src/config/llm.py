@@ -30,7 +30,7 @@ def get_llm():
         model="gemini-3.8-flash",
         google_api_key=os.getenv("GEMINI_API_KEY"),
         temperature=0,
-        timeout=120,
+        timeout=300,
         max_retries=2,
 )
 

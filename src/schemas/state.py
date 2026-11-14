@@ -6,5 +6,10 @@ class AuditState(TypedDict):
     parsed_ast: List[Dict[str, Any]]
     findings: Annotated[List[Dict[str, Any]], operator.add]
     current_node: str
-    
-    
+    #fields for Router
+    route: str
+    router_reasoning: str
+    #fields for rag search
+    user_query: str
+    rag_response: str
+    retrieved_matches: List[Dict[str, Any]]

@@ -1,7 +1,7 @@
 import chromadb
 from chromadb.utils import embedding_functions
 from pathlib import Path
-
+from rich import print
 class CodebaseVectorStore:
     def __init__(self, db_path: str = "./.chroma_db", collection_name: str = "codebase_ast"):
         self.client = chromadb.PersistentClient(path=db_path)
@@ -24,9 +24,9 @@ class CodebaseVectorStore:
         ids = []
 
         chunk_counter = 0
-
-        for file_meta in parsed_ast_data:
-            rel_path = file_meta.get("relative_path")
+        
+        for file_meta in parsed_ast_data:            
+            rel_path = file_meta.get("file_path")
             if not rel_path:
                 continue
             
@@ -71,7 +71,6 @@ class CodebaseVectorStore:
                 })
                 ids.append(f"{rel_path}::{cls_name}::{chunk_counter}")
                 chunk_counter += 1
-
         if documents:
             self.collection.upsert(
                 documents=documents,
@@ -89,7 +88,7 @@ class CodebaseVectorStore:
             query_texts=[query],
             n_results=top_k
         )
-        
+                
         matches = []
         if results and results.get("documents"):
             for doc, meta in zip(results["documents"][0], results["metadatas"][0]):

@@ -7,7 +7,7 @@ from rich.pretty import pprint
 from src.reporting.console_reporter import display_audit_report
 from src.reporting.exporter import export_report
 from src.vector_store.code_indexer import CodebaseVectorStore
-
+from rich import print
 def run_ingestion(target_dir: str):
     
     print(f" Scanning directory: {target_dir}")
@@ -26,18 +26,28 @@ def run_ingestion(target_dir: str):
 
     vectorStore = CodebaseVectorStore()
     vectorStore.index_parsed_ast(parsed_data, walker)
-    return
+    
+    
     initial_state = {
         "target_dir": target_dir,
         "file_tree": files,
         "parsed_ast": parsed_data,
         "findings": [],
-        "current_node": "entry"
+        "current_node": "entry",
+        "user_query": "how is architecture agent implemented",
+        "route": "",
+        "router_reasoning": "",
+        "rag_response": {},
+        "retrieved_matches": []
     }
     
     
     app = build_audit_graph()
     final_state = app.invoke(initial_state)
+    
+    pprint(final_state['rag_response'])
+    
+    return
     
     display_audit_report(final_state)    
     export_report(final_state, output_path="audit_report.json")
