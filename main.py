@@ -43,6 +43,9 @@ def run_ingestion(target_dir: str):
     
     
     app = build_audit_graph()
+    
+    app.get_graph().print_ascii()
+    return 
     final_state = app.invoke(initial_state)
     
     pprint(final_state['rag_response'])
