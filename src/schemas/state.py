@@ -4,7 +4,9 @@ class AuditState(TypedDict):
     target_dir: str
     file_tree: List[Dict[str, str]]
     parsed_ast: List[Dict[str, Any]]
-    findings: Annotated[List[Dict[str, Any]], operator.add]
+    architecture_findings: List[Dict[str, Any]]
+    quality_findings: List[Dict[str, Any]]
+    security_findings: List[Dict[str, Any]]
     current_node: str
     #fields for Router
     route: str

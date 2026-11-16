@@ -23,14 +23,12 @@ def architecture_auditor_node(state: AuditState) -> AuditState:
     try:
         result: AgentFindingReport = structured_llm.invoke([HumanMessage(content=prompt)])
         print(f"Raw Structured LLM Output: {result}")
-        new_findings = [f.model_dump() for f in result.findings]
+        findings = [f.model_dump() for f in result.findings]
     except Exception as e:
         print(f"Error in Architecture Auditor: {e}")
-        new_findings = []
-        
-    existing_findings = state.get("findings", [])
+        findings = []        
     
     return {
-        "findings": existing_findings + new_findings,
+        "findings": findings,
         "current_node": "architecture_auditor",
     }

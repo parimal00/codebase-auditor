@@ -22,15 +22,13 @@ def quality_auditor_node(state: AuditState) -> AuditState:
 
     try:
         result: AgentFindingReport = structured_llm.invoke([HumanMessage(content=prompt)])
-        new_findings = [f.model_dump() for f in result.findings]
+        findings = [f.model_dump() for f in result.findings]
     except Exception as e:
         print(f"Error in Quality Auditor: {e}")
-        new_findings = []
-        
-    existing_findings = state.get("findings", [])
-    
+        findings = []
+            
     return {
-        "findings": existing_findings + new_findings,
+        "quality_findings": findings,
         "current_node": "quality_auditor"
     }
 

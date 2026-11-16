@@ -241,6 +241,7 @@ def main():
         sys.exit(130)
 
     except Exception as error:
+        print(error)
         console.print(
             Panel(
                 f"[red]{error}[/red]",

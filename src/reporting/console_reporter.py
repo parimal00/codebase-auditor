@@ -3,34 +3,65 @@ from rich.table import Table
 
 console = Console()
 
+
 def display_audit_report(final_state: dict):
     console.print("\n[bold cyan]📊 Codebase Audit Report[/bold cyan]\n")
-    
+
     target_dir = final_state.get("target_dir", ".")
-    findings = final_state.get("findings", [])
-    
+
+    architecture_findings = final_state.get("architecture_findings", [])
+    quality_findings = final_state.get("quality_findings", [])
+    security_findings = final_state.get("security_findings", [])
+
+    all_findings = (
+        architecture_findings
+        + quality_findings
+        + security_findings
+    )
+
     console.print(f"[bold]Target Directory:[/bold] {target_dir}")
-    console.print(f"[bold]Total Findings Discovered:[/bold] {len(findings)}\n")
-    
-    if not findings:
-        console.print("[green]✨ No issues found! Clean codebase.[/green]")
-        return
+    console.print(f"[bold]Total Findings Discovered:[/bold] {len(all_findings)}")
+    console.print(
+        f"[bold]Architecture:[/bold] {len(architecture_findings)} | "
+        f"[bold]Quality:[/bold] {len(quality_findings)} | "
+        f"[bold]Security:[/bold] {len(security_findings)}\n"
+    )
 
-    table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("Severity", style="dim", width=10)
-    table.add_column("Category", width=15)
-    table.add_column("File / Location", width=20)
-    table.add_column("Description")
+    def display_findings(title: str, findings: list):
+        console.print(f"\n[bold cyan]{title}[/bold cyan]")
 
-    for f in findings:
-        severity = f.get("severity", "info")
-        color = "red" if severity == "high" else "yellow" if severity == "medium" else "blue"
-        
-        table.add_row(
-            f"[{color}]{severity.upper()}[/{color}]",
-            f.get("category", "general"),
-            f.get("file_path", "N/A"),
-            f.get("description", "")
-        )
+        if not findings:
+            console.print("[green]No issues found.[/green]")
+            return
 
-    console.print(table)
+        table = Table(show_header=True, header_style="bold magenta")
+
+        table.add_column("Severity", style="dim", width=10)
+        table.add_column("Category", width=15)
+        table.add_column("File / Location", width=25)
+        table.add_column("Description")
+
+        for finding in findings:
+            severity = finding.get("severity", "info").lower()
+
+            color = (
+                "red" if severity == "high"
+                else "yellow" if severity == "medium"
+                else "blue"
+            )
+
+            table.add_row(
+                f"[{color}]{severity.upper()}[/{color}]",
+                finding.get("category", "general"),
+                finding.get("file_path", "N/A"),
+                finding.get("description", "")
+            )
+
+        console.print(table)
+
+    display_findings("🏗️ Architecture Findings", architecture_findings)
+    display_findings("✨ Code Quality Findings", quality_findings)
+    display_findings("🔒 Security Findings", security_findings)
+
+    if not all_findings:
+        console.print("\n[bold green]✨ No issues found! Clean codebase.[/bold green]")
