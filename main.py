@@ -12,6 +12,7 @@ from rich.pretty import pprint
 
 from src.ingestion.codebase_walker import CodebaseWalker
 from src.ingestion.ast_parser import PythonASTParser
+from src.schemas.ast_dto import ParsedFileDTO
 from src.agents.graph_router import build_audit_graph
 from src.reporting.console_reporter import display_audit_report
 from src.reporting.exporter import export_report
@@ -156,7 +157,7 @@ def prepare_codebase(target_dir: Path):
 def build_initial_state(
     target_dir: Path,
     files: list,
-    parsed_data: list,
+    parsed_data: list[ParsedFileDTO],
     query: str
 ):
     return {

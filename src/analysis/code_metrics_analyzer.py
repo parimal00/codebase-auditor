@@ -1,5 +1,6 @@
 import ast
 
+
 class ComplexityVisitor(ast.NodeVisitor):
     def __init__(self):
         self.complexity = 1
@@ -46,11 +47,12 @@ class ComplexityVisitor(ast.NodeVisitor):
 
 
 class CodeMetricsAnalyzer:
+    """Calculates cyclomatic complexity for Python AST function nodes."""
+
     def calculate_cyclomatic_complexity(
         self,
         function_node: ast.FunctionDef | ast.AsyncFunctionDef
     ) -> int:
-
         visitor = ComplexityVisitor()
 
         for statement in function_node.body:
