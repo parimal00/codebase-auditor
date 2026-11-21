@@ -174,7 +174,9 @@ def build_initial_state(
         
         "user_query": query,
         "rag_response": {},
-        "retrieved_matches": []
+        "retrieved_matches": [],
+        
+        "findings": [],
     }
 
 

@@ -11,41 +11,48 @@ from src.schemas.context_dto import (
     FileSecurityContextDTO,
 )
 
+from src.analysis.complexity_severity import ComplexitySeverityEvaluator
+
 
 class QualityContextBuilder:
-    """Adapts canonical parsed AST DTOs into the specific context required by Quality Auditor."""
+    """Adapts parsed AST DTOs into the context required by Quality Auditor."""
 
-    def build(self, parsed_files: List[Union[ParsedFileDTO, dict]]) -> QualityContextDTO:
-        file_contexts: List[FileQualityContextDTO] = []
+    def __init__(self):
+        self.severity_evaluator = ComplexitySeverityEvaluator()
 
-        for pf in parsed_files:
-            if isinstance(pf, dict):
-                pf = ParsedFileDTO.model_validate(pf)
-
-            if pf.error:
+    def build(
+        self,
+        parsed_files: list[ParsedFileDTO],
+    ) -> QualityContextDTO:
+        file_contexts = []
+        
+        for parsed_file in parsed_files:
+            if parsed_file.error:
                 continue
 
-            quality_funcs = [
+            quality_functions = [
                 FunctionQualityDTO(
-                    name=func.name,
-                    qualified_name=func.qualified_name,
-                    kind=func.kind,
-                    lineno=func.lineno,
-                    args=func.args,
-                    docstring=func.docstring,
-                    cyclomatic_complexity=func.cyclomatic_complexity,
+                    name=function.name,
+                    qualified_name=function.qualified_name,
+                    kind=function.kind,
+                    lineno=function.lineno,
+                    args=function.args,
+                    docstring=function.docstring,
+                    cyclomatic_complexity=function.cyclomatic_complexity,
+                    complexity_severity=self.severity_evaluator.evaluate(function.cyclomatic_complexity),
                 )
-                for func in pf.functions
+                for function in parsed_file.functions
             ]
 
             file_contexts.append(
                 FileQualityContextDTO(
-                    file_path=pf.file_path,
-                    functions=quality_funcs,
+                    file_path=parsed_file.file_path,
+                    functions=quality_functions,
                 )
             )
 
         return QualityContextDTO(files=file_contexts)
+
 
 
 class ArchitectureContextBuilder:

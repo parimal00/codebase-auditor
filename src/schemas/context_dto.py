@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 
 
@@ -16,6 +16,12 @@ class FunctionQualityDTO(BaseModel):
     args: List[str] = Field(default_factory=list)
     docstring: Optional[str] = None
     cyclomatic_complexity: int = 1
+    complexity_severity: Literal[
+        "low",
+        "medium",
+        "high",
+        "critical"
+    ]
 
 
 class FileQualityContextDTO(BaseModel):

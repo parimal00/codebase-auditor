@@ -17,3 +17,5 @@ class AuditState(TypedDict):
     user_query: str
     rag_response: str
     retrieved_matches: List[Dict[str, Any]]
+    #fields for aggregated findings
+    findings: List[Dict[str, Any]]
