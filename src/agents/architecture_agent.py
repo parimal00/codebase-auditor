@@ -2,6 +2,7 @@ from langchain_core.messages import HumanMessage
 from src.schemas.state import AuditState
 from src.config.llm import get_llm
 from src.schemas.findings import AgentFindingReport
+from rich import print
 def architecture_auditor_node(state: AuditState) -> AuditState:
     print("Running Architecture Auditor Node...")
     
@@ -25,10 +26,9 @@ def architecture_auditor_node(state: AuditState) -> AuditState:
         print(f"Raw Structured LLM Output: {result}")
         findings = [f.model_dump() for f in result.findings]
     except Exception as e:
-        print(f"Error in Architecture Auditor: {e}")
+        print(f"[bold red]Error in Architecture Auditor:[/bold red] {e}")
         findings = []        
     
     return {
-        "findings": findings,
-        "current_node": "architecture_auditor",
+        "architecture_findings": findings,
     }

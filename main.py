@@ -16,10 +16,9 @@ from src.agents.graph_router import build_audit_graph
 from src.reporting.console_reporter import display_audit_report
 from src.reporting.exporter import export_report
 from src.vector_store.code_indexer import CodebaseVectorStore
-
+import traceback
 
 console = Console()
-
 
 def show_banner():
     console.print(
@@ -29,7 +28,6 @@ def show_banner():
             border_style="cyan"
         )
     )
-
 
 def get_arguments():
     parser = argparse.ArgumentParser(
@@ -165,11 +163,15 @@ def build_initial_state(
         "target_dir": str(target_dir.resolve()),
         "file_tree": files,
         "parsed_ast": parsed_data,
-        "findings": [],
+        "architecture_findings": [],
+        "quality_findings": [],
+        "security_findings": [],        
         "current_node": "entry",
-        "user_query": query,
-        "route": "",
+        
+        "route": "router_node",
         "router_reasoning": "",
+        
+        "user_query": query,
         "rag_response": {},
         "retrieved_matches": []
     }
@@ -241,7 +243,7 @@ def main():
         sys.exit(130)
 
     except Exception as error:
-        print(error)
+        console.print_exception(show_locals=True)
         console.print(
             Panel(
                 f"[red]{error}[/red]",

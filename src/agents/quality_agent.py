@@ -2,6 +2,7 @@ from src.schemas.state import AuditState
 from src.config.llm import get_llm
 from src.schemas.findings import AgentFindingReport
 from langchain_core.messages import HumanMessage
+from rich import print
 
 def quality_auditor_node(state: AuditState) -> AuditState:
     print("🧹 Running Code Quality Auditor...")
@@ -24,11 +25,10 @@ def quality_auditor_node(state: AuditState) -> AuditState:
         result: AgentFindingReport = structured_llm.invoke([HumanMessage(content=prompt)])
         findings = [f.model_dump() for f in result.findings]
     except Exception as e:
-        print(f"Error in Quality Auditor: {e}")
+        print(f"[bold red]Error in Quality Auditor:[/bold red] {e}")
         findings = []
             
     return {
         "quality_findings": findings,
-        "current_node": "quality_auditor"
     }
 

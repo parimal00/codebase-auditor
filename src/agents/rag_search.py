@@ -6,6 +6,7 @@ from src.schemas.rag_response import RAGResponseSchema
 
 def rag_search_node(state: AuditState) -> AuditState:
     """Performs semantic RAG retrieval and generates an answer using retrieved code context."""
+    print("running rag search...")
     user_query = state.get("user_query", "")
     
     vector_store = CodebaseVectorStore()

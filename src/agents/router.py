@@ -5,6 +5,7 @@ from src.schemas.route_decision import RouteDecision
 
 def router_node(state: AuditState) -> dict:
     """Classifies user query intent for conditional graph routing."""
+    print('routing.....')
     user_query = state.get("user_query", "")
     
     llm = get_llm()

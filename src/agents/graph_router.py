@@ -18,6 +18,7 @@ def audit_node(state: AuditState) -> dict:
 
 def off_topic_node(state: AuditState) -> dict:
     """Rejects off-topic prompts or small talk."""
+    print("in the off topic node")
     return {
         "rag_response": {"answer": "I can only assist with codebase queries and code audits.", "referenced_files": []}
     }
@@ -25,7 +26,7 @@ def off_topic_node(state: AuditState) -> dict:
 def route_next_step(state: AuditState) -> str:
     routes = {
         "rag_search": "rag_search",
-        "code_audit": "audit_node",
+        "code_audit": "code_audit",
     }
 
     return routes.get(state.get("route"), "off_topic")

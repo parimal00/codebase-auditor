@@ -2,7 +2,7 @@ from src.schemas.state import AuditState
 from src.config.llm import get_llm
 from src.schemas.findings import AgentFindingReport
 from langchain_core.messages import HumanMessage
-
+from rich import print
 def security_auditor_node(state: AuditState) -> AuditState:
     print("🔒 Running Security & Compliance Auditor...")
     
@@ -24,10 +24,9 @@ def security_auditor_node(state: AuditState) -> AuditState:
         result: AgentFindingReport = structured_llm.invoke([HumanMessage(content=prompt)])
         findings = [f.model_dump() for f in result.findings]
     except Exception as e:
-        print(f"Error in Security Auditor: {e}")
+        print(f"[bold red]Error in Security Auditor:[/bold red] {e}")
         findings = []
         
     return {
         "security_findings": findings,
-        "current_node": "security_auditor"
     }
