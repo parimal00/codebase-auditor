@@ -6,6 +6,7 @@ from src.agents.security_agent import security_auditor_node
 from src.agents.rag_search import rag_search_node
 from src.agents.router import router_node
 from src.agents.finding_prioritizer_agent import finding_prioritizer_node
+from src.agents.deduplicator_agent import finding_deduplicator_node
 def aggregator_node(state: AuditState) -> AuditState:
     """Combines findings or finalizes state after parallel agent execution."""
     print("📊 Aggregating audit findings from all agents...")
@@ -55,6 +56,7 @@ def build_audit_graph():
     workflow.add_node("quality_auditor", quality_auditor_node)
     workflow.add_node("security_auditor", security_auditor_node)
     workflow.add_node("aggregator", aggregator_node)
+    workflow.add_node("finding_deduplicator",finding_deduplicator_node)
 
     workflow.add_edge(START, "router")
     
@@ -73,11 +75,12 @@ def build_audit_graph():
     workflow.add_edge("quality_auditor", "aggregator")
     workflow.add_edge("security_auditor", "aggregator")
     workflow.add_edge("architecture_auditor", "aggregator")
-    workflow.add_edge("aggregator", "finding_prioritizer")
-    
+   
     workflow.add_edge("rag_search", "aggregator")
     workflow.add_edge("off_topic", "aggregator")
     
-    workflow.add_edge("finding_prioritizer", END)
+    workflow.add_edge("aggregator", "finding_prioritizer")
+    workflow.add_edge("finding_prioritizer", "finding_deduplicator")
+    workflow.add_edge("finding_deduplicator", END)
     
     return workflow.compile()
