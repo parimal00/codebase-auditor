@@ -19,3 +19,5 @@ class AuditState(TypedDict):
     retrieved_matches: List[Dict[str, Any]]
     #fields for aggregated findings
     findings: List[Dict[str, Any]]
+    #resonse for improvement node
+    improvement_suggestions: List[Dict[str, Any]]
