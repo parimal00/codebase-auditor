@@ -1,0 +1,40 @@
+{
+    "findings": [
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "high_cyclomatic_complexity",
+            "target": "process_order"
+        },
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "missing_docstring",
+            "target": "process_order"
+        },
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "missing_docstring",
+            "target": "x"
+        },
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "poor_naming",
+            "target": "x"
+        },
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "excessive_nesting",
+            "target": "process_order"
+        },
+        {
+            "category": "quality",
+            "file_path": "order_service.py",
+            "issue": "long_function",
+            "target": "process_order"
+        }
+    ]
+}

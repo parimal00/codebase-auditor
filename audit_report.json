@@ -1,0 +1,41 @@
+{
+  "target_dir": "/home/nitro/Projects/AI/codebase-auditor",
+  "total_findings": 5,
+  "findings": [
+    {
+      "category": "architecture",
+      "severity": "medium",
+      "file_path": "src/schemas/route_decision.py",
+      "title": "Circular Dependency or Layer Violation in Schema Definition",
+      "description": "The file src/schemas/route_decision.py imports src.config.llm.get_llm and src.schemas.state.AuditState. Schemas should ideally remain pure data structures without depending on configuration or agent state layers to maintain proper separation of concerns."
+    },
+    {
+      "category": "quality",
+      "severity": "medium",
+      "file_path": "src/vector_store/code_indexer.py",
+      "title": "High cyclomatic complexity",
+      "description": "Function 'CodebaseVectorStore.index_parsed_ast' has a cyclomatic complexity of 19 (threshold: 10). Consider breaking it into smaller functions with more focused responsibilities."
+    },
+    {
+      "category": "quality",
+      "severity": "medium",
+      "file_path": "src/vector_store/code_indexer.py",
+      "title": "Missing Docstring for Method",
+      "description": "The method CodebaseVectorStore.__init__ is missing a docstring. Add a descriptive docstring explaining its initialization parameters and purpose."
+    },
+    {
+      "category": "quality",
+      "severity": "medium",
+      "file_path": "src/analysis/quality_rules.py",
+      "title": "Missing Docstrings on Core Analysis Class",
+      "description": "Methods in ComplexityRule are missing docstrings. Providing docstrings improves maintainability and code readability."
+    },
+    {
+      "category": "quality",
+      "severity": "low",
+      "file_path": "src/reporting/console_reporter.py",
+      "title": "Missing Docstring for Function",
+      "description": "The function display_audit_report is missing a docstring. Document its input arguments and intended reporting behavior."
+    }
+  ]
+}

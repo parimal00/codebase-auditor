@@ -152,8 +152,26 @@ def prepare_codebase(target_dir: Path):
     )
 
     return walker, files, parsed_data
+def run_codebase_analysis(target_dir: Path, query: str):
+    walker, files, parsed_data = prepare_codebase(target_dir)
 
+    with console.status("[cyan]Indexing codebase...[/cyan]"):
+        vector_store = CodebaseVectorStore()
+        vector_store.index_parsed_ast(parsed_data, walker)
 
+    initial_state = build_initial_state(
+        target_dir,
+        files,
+        parsed_data,
+        query
+    )
+
+    app = build_audit_graph()
+
+    with console.status("[bold cyan]Running analysis...[/bold cyan]"):
+        final_state = app.invoke(initial_state)
+
+    return final_state
 def build_initial_state(
     target_dir: Path,
     files: list,
@@ -179,6 +197,16 @@ def build_initial_state(
         "findings": [],
     }
 
+def run_audit(target_dir: Path):
+    query = (
+        "Perform a comprehensive codebase audit. "
+        "Analyze architecture, code quality, and security."
+    )
+
+    return run_codebase_analysis(target_dir, query)
+
+def run_question(target_dir: Path, query: str):
+    return run_codebase_analysis(target_dir, query)
 
 def run_ingestion(args):
     target_dir = args.path.resolve()
@@ -188,33 +216,9 @@ def run_ingestion(args):
 
     mode, query = get_user_input(args)
 
-    walker, files, parsed_data = prepare_codebase(target_dir)
-
-    with console.status("[cyan]Indexing codebase...[/cyan]"):
-        vector_store = CodebaseVectorStore()
-        vector_store.index_parsed_ast(parsed_data, walker)
-
-    console.print("[green]✓[/green] Codebase indexed successfully.")
-
-    initial_state = build_initial_state(
-        target_dir,
-        files,
-        parsed_data,
-        query
-    )
-
-    app = build_audit_graph()
-
-    if args.show_graph:
-        console.print("\n[bold]Workflow graph:[/bold]")
-        app.get_graph().print_ascii()
-
-    with console.status(
-        "[bold cyan]Running AI agents...[/bold cyan]"
-    ):
-        final_state = app.invoke(initial_state)
-
     if mode == "audit":
+        final_state = run_audit(target_dir)
+        
         display_audit_report(final_state)
 
         export_report(
@@ -227,6 +231,8 @@ def run_ingestion(args):
         )
 
     else:
+        final_state = run_question(target_dir, query)
+
         console.print("\n[bold cyan]RAG Response[/bold cyan]")
         pprint(final_state.get("rag_response", {}))
 
